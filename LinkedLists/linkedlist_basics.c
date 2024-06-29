@@ -11,6 +11,7 @@ void display_list(struct node *head);
 void search_list(struct node *head);
 void replace_list(struct node *head);
 void insert_list(struct node *head);
+void delete_list(struct node *head);
 
 int main () {
     struct node *n1;
@@ -21,8 +22,19 @@ int main () {
     // search_list(n1);
     // replace_list(n1);
     // display_list(n1);
-    insert_list(n1);
+    // insert_list(n1);
+    // display_list(n1);
+    delete_list(n1);
     display_list(n1);
+
+    // struct node *n2, *n3;
+    // n1->data = 10;
+    // n1->next = n2;
+    // n2->data = 20;
+    // n2->next = n3;
+    // n3->data = 30;
+    // n3->next = 0;
+    // display_list(n1);
 
     return 0;
 }
@@ -102,7 +114,7 @@ void replace_list(struct node *head) {
 }
 
 void insert_list(struct node *head) {
-     printf("---Inserting a value---\n");
+    printf("---Inserting a value---\n");
     struct node *current;
     current = head;
 
@@ -126,16 +138,18 @@ void insert_list(struct node *head) {
     struct node *newnode;
     newnode = (struct node*)malloc(sizeof(struct node));
 
-    if (position == 1) {
+    if (position <= 1) {
         // New head (can't modify head pointer)
         // So newnode is now 2nd node, but exchange previous head and newnode values
         printf("Inserting at head\n");
+        position = 1; // any value < range is head
         newnode->next = current->next; // new node has old head's details
         newnode->data = current->data;
         current->next = newnode; // add new value to head andre-wire
         current->data = value;
 
-    } else if (position == (length+1)) {
+    } else if (position >= (length+1)) {
+        position = length+1; // any value >range is tail
         printf("Inserting at tail\n");
         while (current->next != 0) {
             current = current->next;
@@ -156,5 +170,45 @@ void insert_list(struct node *head) {
         current->next = newnode;
         
     }
+}
+
+void delete_list(struct node *head) {
+    printf("---Deleting a value---\n");
+    struct node *current, *trace;
+    current = head;
+    int position, length = 0;
+
+    while (current != 0) {
+        length++;
+        current = current->next;
+    }
+    current = head;
+
+    printf("Enter the position to delete:");
+    scanf("%d", &position);
+
+    if (position <= 1) {
+        position = 1;
+        current->data = current->next->data;
+        current->next = current->next->next;
+
+    } else if (position >= length) {
+        position = length;
+        while (current->next->next != 0) {
+            current = current->next;
+        }
+        current->next = 0;
+
+    } else {
+        int i = 1;
+        while (i < position-1) {
+            current = current->next;
+            i++;
+        }
+        current->next = current->next->next;
+
+    }
 
 }
+
+
